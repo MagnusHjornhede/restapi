@@ -4,14 +4,14 @@ from sqlalchemy.sql import func  # used to get date and more?
 
 
 class Note(db.Model):
-    id = db.Column(db.Interger, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.String(10000))
     date = db.Column(db.DateTime(timezone=True), default=func.now())  # allow alchemy self set date
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # Getting form class User.id
 
 
 class User(db.Model, UserMixin):
-    id = db.Column(db.Interger, primart_key=True)  # Foreign key for Notes
+    id = db.Column(db.Integer, primart_key=True)  # Foreign key for Notes
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
