@@ -1,5 +1,6 @@
 from flask import Flask  # __ and __ makes a python package?
 from flask_sqlalchemy import SQLAlchemy
+from os import path
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
@@ -16,4 +17,13 @@ def create_app():
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
+    # First make sure modes load up before continue
+    from .models import User, Note
+    create_database(app)
     return app
+
+
+def create_database(app):  # check if database is already created
+    if not path.exists('website/' + DB_NAME):
+        db.create_all(app=app)  # need to inform for which app alchemy is creating app for
+        print('Database created')
