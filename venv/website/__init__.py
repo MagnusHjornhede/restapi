@@ -1,6 +1,7 @@
 from flask import Flask  # __ and __ makes a python package?
 from flask_sqlalchemy import SQLAlchemy
 from os import path
+from flask_login import LoginManager
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
@@ -12,6 +13,8 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'  # Tell database location
     db.init_app(app)  # init database
 
+
+
     from .views import views
     from .auth import auth
 
@@ -21,6 +24,16 @@ def create_app():
     from .models import User, Note
 
     create_database(app)
+    # login_manager block must be below the creation of the database
+    login_manager = LoginManager()
+    login_manager.login_view = 'auth.login'
+    login_manager.init_app(app)  # Tell login manager which app to use.
+
+    # This block informs flask how to load a user
+    @login_manager.user_loader
+    def load_user(id):
+        return User.query.get(int(id))  # checking for primary key
+
     return app
 
 
