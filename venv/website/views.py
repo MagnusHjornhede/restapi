@@ -7,4 +7,4 @@ views = Blueprint('views', __name__)  # Setting up blueprint for flask app
 @views.route('/')
 @login_required
 def home():
-    return render_template("home.html")
+    return render_template("home.html", user= current_user)
