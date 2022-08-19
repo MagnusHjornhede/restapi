@@ -22,13 +22,13 @@ def home():
     return render_template("home.html", user=current_user)
 
 
-@views.route('/delete-not', methods=['POST'])
+@views.route('/delete-note', methods=['POST'])
 def delete_note():          # Request not sent as form, so the request comes in the data parameter
     note = json.loads(request.data)  # so it needs to loaded as json
     noteId = note['noteId']
     note = Note.query.get(noteId)
     if note:
-        if note.user.id == current_user.id:  # make sure user own node
+        if note.user_id == current_user.id:  # make sure user own node
             db.session.delete(note)
             db.session.commit()
-            return jsonify({})      # return as json object
+    return jsonify({})      # return as json object
