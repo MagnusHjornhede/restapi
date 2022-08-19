@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, request, flash
+from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
 from .models import Note
-
+import json
 from . import db
 
 views = Blueprint('views', __name__)  # Setting up blueprint for flask app
@@ -20,3 +20,15 @@ def home():
             db.session.commit()
             flash('Note created', category='success')
     return render_template("home.html", user=current_user)
+
+
+@views.route('/delete-not', methods=['POST'])
+def delete_note():          # Request not sent as form, so the request comes in the data parameter
+    note = json.loads(request.data)  # so it needs to loaded as json
+    noteId = note['noteId']
+    note = Note.query.get(noteId)
+    if note:
+        if note.user.id == current_user.id:  # make sure user own node
+            db.session.delete(note)
+            db.session.commit()
+            return jsonify({})      # return as json object

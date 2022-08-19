@@ -2,7 +2,7 @@ function deleteNote(noteId){
     fetch('/delete-note', {
         method: 'POST'
         body: JSON.stringify({noteId:noteId})
-    }).then((_res))=> {
+    }).then((_res))=> {     // Reload the window
     window.location.href="/";
     });
 }
